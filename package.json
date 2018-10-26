@@ -16,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/song940/xiaoai/issues"
   },
-  "homepage": "https://github.com/song940/xiaoai#readme"
+  "homepage": "https://github.com/song940/xiaoai#readme",
+  "dependencies": {
+    "kelp": "^2.0.1",
+    "kelp-body": "^1.4.2",
+    "kelp-send": "^1.0.4"
+  }
 }
