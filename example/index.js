@@ -1,16 +1,15 @@
 const XiaoAI = require('..');
+const Response = require('../response/Response');
 
-const xiaoai = new XiaoAI();
+const ai = new XiaoAI({
 
-const response = new XiaoAI.Response()
-  .speak('hello')
-  .display('greeting')
-  .event('mediaplayer.playbacknearlyfinished')
-  .directive()
-  .directive()
-  .action()
-  .wait()
+});
 
-console.log(response);
+ai.on('message', (req, res) => {
+  console.log(req);
+  const response = new Response();
+  response.speak('hello');
+  res.reply(response);
+});
 
-xiaoai.start();
+ai.start();

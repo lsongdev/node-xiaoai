@@ -2,31 +2,23 @@ const http = require('http');
 const kelp = require('kelp');
 const send = require('kelp-send');
 const body = require('kelp-body');
-const EventEmitter = require('events');
+const Request = require('./request');
+const Response = require('./response');
 
-class XiaoAI extends EventEmitter {
+class XiaoAI extends http.Server {
   constructor(options){
-    super();
-    this.app = kelp();
-    this.server = http.createServer(this.app);
-    Object.assign(this, { 
-      port: 6789
-    }, options);
-    this.app.use(send);
-    this.app.use(body);
-    this.app.use((req, res) => {
-      const request = new XiaoAI.Request(req.body);
-      console.log(req.headers['Authorization'], request);
-      res.send(request);
-    });
+    super(kelp(body, send, (req, res) => {
+      const request = new Request(req.body);
+      const response = new Response();
+      response.send = res.send.bind(res, response);
+      this.emit('message', request, response);
+    }));
+    return Object.assign(this, options);
   }
   start(fn){
-    const { port } = this;
-    return this.server.listen(port, fn);
+    const { port = 3000 } = this;
+    return this.listen(port, fn);
   }
 }
-
-XiaoAI.Request = require('./request');
-XiaoAI.Response = require('./response');
 
 module.exports = XiaoAI;
